@@ -59,11 +59,13 @@ export const AuthContextProvider = (props) => {
     
   }
 
-  const login = (token,exp, userId) => {
+  const login = (token, exp, userId) => {
     setToken(token)
     setUserId(userId)
+
     localStorage.setItem('token', token)
     localStorage.setItem('exp', exp)
+    localStorage.setItem('userId', userId)
 
     const remainingTime = calculateRemainingTime(exp)
 
@@ -71,6 +73,12 @@ export const AuthContextProvider = (props) => {
     console.log("Login Ran")
 
   }
+  useEffect(() => {
+    if(localData) {
+      logoutTimer = setTimeout(logout, localData.duration)
+    }
+  }, [localData, logout]
+  )
 
 
   const contextValue = {

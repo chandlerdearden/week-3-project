@@ -1,6 +1,6 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
-const {SECRET} = process.env
+const {SECRET} = process.env /* Grabs SECRET variable from .env */
 
 module.exports = {
     isAuthenticated: (req, res, next) => {

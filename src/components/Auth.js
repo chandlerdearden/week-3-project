@@ -8,6 +8,7 @@ const Auth = () => {
   const [register, setRegister] = useState(true);
 
   const authCtx = useContext(AuthContext)
+  // const baseURL = "https://socialmtn.devmountain.com";
 
   const submitHandler = (e) => {
       e.preventDefault();
@@ -17,11 +18,11 @@ const Auth = () => {
         password
        }
        console.log(body)
-    const baseURL = "https://socialmtn.devmountain.com";
-    axios.post(register ? `${baseURL}/register`: `${baseURL}/login`, body)
-    .then(({data}) => {
-        console.log(data)
-        authCtx.login(data.token, data.exp, data.userId)
+
+    axios.post(register ? `/register`: `/login`, body)
+    .then((res) => {
+        console.log(res.data)
+        authCtx.login(res.data.token, res.data.exp, res.data.userId)
     })
     .catch(err => {
         console.log(err)
