@@ -18,12 +18,14 @@ const calculateRemainingTime = (exp) => {
 const getLocalData = () => {
   const storedToken = localStorage.getItem('token')
   const storedExp = localStorage.getItem('exp')
+  const storedUserId = localStorage.getItem('userId')
 
   const remainingTime = calculateRemainingTime(storedExp)
 
   if (remainingTime <= 1000 * 60 * 30) {
     localStorage.removeItem('token')
     localStorage.removeItem('exp')
+    localStorage.removeItem('userId')
     return null
   }
 
@@ -31,6 +33,7 @@ const getLocalData = () => {
   return {
     token: storedToken,
     duration: remainingTime,
+    userid: +storedUserId
   }
 }
 

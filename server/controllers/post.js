@@ -1,17 +1,75 @@
+const { User } = require("../models/user");
+const { Post } = require("../models/post");
+
 module.exports = {
-    getAllPosts: (req,res) => {
-        console.log('getAllPosts')
-    },
-    getCurrentUserPosts: (req,res) => {
-        console.log('get Current user post')
-    },
-    addPost:(req,res) => {
-        console.log('add posts')
-    },
-    editPost:(req,res) => {
-        console.log('edit post')
-    },
-    deletePost:(req,res) => {
-        console.log('delete post')
+  getAllPosts: async (req, res) => {
+    try {
+      const posts = await Post.findAll({
+        where: { privateStatus: false },
+        include: [
+          {
+            model: User,
+            required: true,
+            attributes: [`username`],
+          },
+        ],
+      });
+      res.status(200).send(posts);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(400);
     }
-}
+  },
+
+  getCurrentUserPosts: async (req, res) => {
+    const { userId } = req.params;
+    try {
+      const posts = await Post.findAll({
+        where: { userId: userId },
+        include: [
+          {
+            model: User,
+            required: true,
+            attributes: [`username`],
+          },
+        ],
+      });
+      res.status(200).send(posts);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(400);
+    }
+  },
+  addPost: async (req, res) => {
+    try {
+      const { title, content, status, userId } = req.body;
+      await Post.create({ title, content, privateStatus: status, userId });
+      res.sendStatus(200);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(400);
+    }
+  },
+  editPost: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      await Post.update({ privateStatus: status }, 
+        { where: { id: +id } });
+        res.sendStatus(200)
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(400);
+    }
+  },
+  deletePost: async (req, res) => {
+    try {
+      const {id} = req.params
+      await Post.destroy({where: {id: +id}})
+      res.sendStatus(200)
+    }
+    catch(err) {
+      console.log(err)
+    }
+  },
+};
